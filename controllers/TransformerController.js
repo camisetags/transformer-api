@@ -1,5 +1,5 @@
 module.exports = function (app) {
-
+    var mongoose = require('mongoose');
     var Transformer = app.models.Transformer;
 
     var TransformerController = {
@@ -7,19 +7,19 @@ module.exports = function (app) {
             var page = 0;
 
             if (req.query.page) {
-                page = req.query.page == 1 ? 0 : req.query.page * 5 - 5;
+                page = req.query.page == 1 ? 0 : req.query.page * 6 - 6;
             }
 
-            Transformer.find({}, {}, { skip: page, limit: 5 }, function (err, transformers) {
+            Transformer.find({}, {}, { skip: page, limit: 6 }, function (err, docs) {
                 if (err) {
                     res.json({
-                        type: false,
-                        data: 'Opa deu erro! ' + err
+                        code: 500,
+                        data: 'Opa, olha o erro: ' + err
                     });
                 } else {
                     res.json({
-                        type: true,
-                        data: transformers
+                        code: 200,
+                        data: docs
                     });
                 }
             });
@@ -30,22 +30,22 @@ module.exports = function (app) {
             if (req.body.description && req.body.problem) {
                 var trans = Transformer(req.body);
 
-                trans.save(function (err, tra) {
+                trans.save(function (err, doc) {
                     if (err) {
                         res.json({
-                            type: false,
-                            data: 'Opa deu erro! ' + err
+                            code: 500,
+                            data: 'Opa, olha o erro: ' + err
                         });
                     } else {
                         res.json({
-                            type: true,
-                            data: tra
+                            code: 200,
+                            data: doc
                         });
                     }
                 });
             } else {
                 res.json({
-                    type: false,
+                    code: 400,
                     data: {
                         'description': 'deve ser preenchida',
                         'problem': 'deve ser preenchido'
@@ -56,14 +56,76 @@ module.exports = function (app) {
 
         show: function (req, res) {
 
+            Transformer.findById(req.params.id, 'problem description', function (err, doc) {
+                if (err) {
+                    res.json({
+                        code: 500,
+                        data: 'Opa, olha o erro: ' + err
+                    });
+                } else if (!doc) {
+                    res.json({
+                        code: 404,
+                        data: 'Transformer não foi encontrado!'
+                    });
+                } else {
+                    res.json({
+                        code: 200,
+                        data: doc
+                    });
+                }
+            });
         },
 
         update: function (req, res) {
 
+            Transformer.findById(req.params.id, function (err, doc) {
+                if (err) {
+                    res.json({
+                        code: 500,
+                        data: 'Opa, olha o erro: ' + err
+                    });
+                } else if (!doc) {
+                    res.json({
+                        code: 404,
+                        data: 'Transformer não foi encontrado!'
+                    });
+                } else {
+
+                    doc.description = req.body.description;
+                    doc.problem = req.body.problem;
+                    doc.save();
+
+                    res.json({
+                        code: 200,
+                        data: doc
+                    });
+                }
+            });
         },
 
         delete: function (req, res) {
-
+            
+            Transformer.findByIdAndRemove(req.params.id, function (err, doc) {
+                if (err) {
+                    res.json({
+                        code: 500,
+                        data: 'Opa, olha o erro: ' + err
+                    });
+                } else if (!doc) {
+                    res.json({
+                        code: 404,
+                        data: 'Transformer não foi encontrado!'
+                    });
+                } else {
+                    res.json({
+                        code: 200,
+                        data: {
+                            message: 'removido com sucesso',
+                            obj: doc
+                        }
+                    });
+                }
+            });
         }
     };
 
