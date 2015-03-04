@@ -27,7 +27,7 @@ module.exports = function (app) {
 
         store: function (req, res) {
 
-            if (req.body.description && req.body.problem) {
+            if (req.body.status) {
                 var trans = Transformer(req.body);
 
                 trans.save(function (err, doc) {
@@ -47,8 +47,7 @@ module.exports = function (app) {
                 res.json({
                     code: 400,
                     data: {
-                        'description': 'deve ser preenchida',
-                        'problem': 'deve ser preenchido'
+                        'status': 'deve ser preenchida'
                     }
                 });
             }
@@ -56,7 +55,7 @@ module.exports = function (app) {
 
         show: function (req, res) {
 
-            Transformer.findById(req.params.id, 'problem description', function (err, doc) {
+            Transformer.findById(req.params.id, function (err, doc) {
                 if (err) {
                     res.json({
                         code: 500,
@@ -91,8 +90,7 @@ module.exports = function (app) {
                     });
                 } else {
 
-                    doc.description = req.body.description;
-                    doc.problem = req.body.problem;
+                    doc.status = req.body.status;
                     doc.save();
 
                     res.json({
@@ -104,7 +102,7 @@ module.exports = function (app) {
         },
 
         delete: function (req, res) {
-            
+
             Transformer.findByIdAndRemove(req.params.id, function (err, doc) {
                 if (err) {
                     res.json({
@@ -123,6 +121,30 @@ module.exports = function (app) {
                             message: 'removido com sucesso',
                             obj: doc
                         }
+                    });
+                }
+            });
+        },
+
+        get_connected: function (req, res) {
+            var query = {
+                status: 'disconnected'
+            };
+            Transformer.find(query, function (err, docs) {
+                if (err) {
+                    res.json({
+                        code: 500,
+                        data: 'Opa, olha o erro: '+ err
+                    });
+                } else if (!docs) {
+                    res.json({
+                        code: 404,
+                        data: 'Nenhum transformador disponível...'
+                    });
+                } else {
+                    res.json({
+                        code: 200,
+                        data: docs
                     });
                 }
             });

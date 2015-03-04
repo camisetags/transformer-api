@@ -1,26 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="transformerApp">
     <head>
         <title>Cliente do socket!</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js" charset="utf-8"></script>
-
         <script src="/socket.io/socket.io.js"></script>
-        <script>
-
-            angular.module('transformerApp', [])
-                .controller('TransformerController', function ($scope) {
-                    var socket = io.connect('http://localhost:3000');
-                    socket.on('news', function (data) {
-                      console.log(data);
-                      socket.emit('my other event', { my: 'data' });
-                    });
-                });
-
-        </script>
+        <link rel="stylesheet" href="/bower/bootstrap/dist/css/bootstrap.min.css" media="screen" title="no title" charset="utf-8">
     </head>
-    <body ng-app="transformerApp">
-        <h1>Api funcionando!</h1>
+    <body ng-controller="TransformerController">
 
-        <label for="texto">Texto: </label> <input type="text" name="texto" value="">
+        <h1>Transformador funcionando!</h1>
+        Status: {{ status }} <br>
+
+        <script src="/bower/angular/angular.min.js" charset="utf-8"></script>
+        <script src="/bower/angular-cookies/angular-cookies.min.js" charset="utf-8"></script>
+        <script src="/angular/controllers/TransformerController.js" charset="utf-8"></script>
     </body>
 </html>
