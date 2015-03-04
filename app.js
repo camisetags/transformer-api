@@ -31,12 +31,17 @@ app.use( function(req, res, next) {
 load('models')
     .then('controllers')
     .then('routes')
-    .then('sockets')
     .into(app);
 
 load('sockets')
     .into(io);
 
-app.listen(3000, function () {
+server.listen(3000, function () {
     console.log('Transformper-api rodando na porta 3000!');
 });
+
+
+
+// io.listen(4500, function () {
+//     console.log('socket.io rodando na porta 4500');
+// });
