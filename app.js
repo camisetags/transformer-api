@@ -4,9 +4,26 @@ var express      = require('express'),
     load         = require('express-load'),
     morgan       = require('morgan'),
     mongoose     = require('mongoose'),
+    swig         = require('swig'),
+    server       = require('http').createServer(),
+    io           = require('socket.io')(server),
     app          = express();
 
+
+io.on('connection', function(socket){
+  socket.on('event', function(data){
+
+  });
+  socket.on('disconnect', function(){
+
+  });
+});
+
 global.db = mongoose.connect('mongodb://localhost:27017/transformer');
+
+app.engine('html', swig.renderFile);
+app.set('view engine', 'html');
+app.set('views', __dirname + '/views');
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -16,7 +33,7 @@ app.use(morgan('dev'));
 app.use( function(req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type, Authorization');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, content-type, Authorization');
 
     next();
 });
