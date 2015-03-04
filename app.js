@@ -4,20 +4,10 @@ var express      = require('express'),
     load         = require('express-load'),
     morgan       = require('morgan'),
     mongoose     = require('mongoose'),
-    swig         = require('swig'),
-    server       = require('http').createServer(),
-    io           = require('socket.io')(server),
-    app          = express();
-
-
-io.on('connection', function(socket){
-  socket.on('event', function(data){
-
-  });
-  socket.on('disconnect', function(){
-
-  });
-});
+    swig         = require('swig');
+    app          = express(),
+    server       = require('http').Server(app),
+    io           = require('socket.io')(server);
 
 global.db = mongoose.connect('mongodb://localhost:27017/transformer');
 
@@ -38,16 +28,14 @@ app.use( function(req, res, next) {
     next();
 });
 
-app.get('/', function (req, res) {
-    res.json({
-        'message': 'api no ar!'
-    });
-});
-
 load('models')
     .then('controllers')
     .then('routes')
+    .then('sockets')
     .into(app);
+
+load('sockets')
+    .into(io);
 
 app.listen(3000, function () {
     console.log('Transformper-api rodando na porta 3000!');

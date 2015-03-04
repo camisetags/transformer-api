@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Cliente do socket!</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js" charset="utf-8"></script>
+        <script src="socket.io/socket.io.js"></script>
+        <script>
+          var socket = io.connect('http://localhost:4500');
+          socket.on('news', function (data) {
+            console.log(data);
+            socket.emit('my other event', { my: 'data' });
+          });
+        </script>
+    </head>
+    <body>
+        <h1>Api funcionando!</h1>
+    </body>
+</html>
