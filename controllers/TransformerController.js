@@ -128,26 +128,34 @@ module.exports = function (app) {
 
         get_connected: function (req, res) {
             var query = {
-                status: 'disconnected'
+                status: req.params.connection
             };
-            Transformer.find(query, function (err, docs) {
-                if (err) {
-                    res.json({
-                        code: 500,
-                        data: 'Opa, olha o erro: '+ err
-                    });
-                } else if (!docs) {
-                    res.json({
-                        code: 404,
-                        data: 'Nenhum transformador disponível...'
-                    });
-                } else {
-                    res.json({
-                        code: 200,
-                        data: docs
-                    });
-                }
-            });
+            
+            if (query.status == 'connected' || query.status == 'disconnected') {
+                Transformer.find(query, function (err, docs) {
+                    if (err) {
+                        res.json({
+                            code: 500,
+                            data: 'Opa, olha o erro: '+ err
+                        });
+                    } else if (!docs) {
+                        res.json({
+                            code: 404,
+                            data: 'Nenhum transformador disponível...'
+                        });
+                    } else {
+                        res.json({
+                            code: 200,
+                            data: docs
+                        });
+                    }
+                });
+            } else {
+                res.json({
+                    code: 500,
+                    data: 'Esperava receber connected ou disconnected como parametro!!'
+                });
+            }
         }
     };
 

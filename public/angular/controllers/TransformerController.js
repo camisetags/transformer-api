@@ -4,12 +4,28 @@ angular.module('transformerApp', ['ngCookies'])
     .controller('TransformerController', function ($scope) {
 
         var socket = io.connect('http://localhost:3000');
-
+        
         socket.on('server_message', function (data) {
             $scope.status = data;
             console.log($scope.status);
         });
+        
+        function* fibonacci() { // a generator function
+            let [prev, curr] = [0, 1];
+            for (;;) {
+                [prev, curr] = [curr, prev + curr];
+                yield curr;
+            }
+        }
 
+        for (let n of fibonacci()) {
+            // truncate the sequence at 1000
+            if (n > 1000)
+                break;
+            print(n);
+        }
+        
+    
         socket.on('con', function (data) {
             console.log(data);
         });
@@ -24,7 +40,7 @@ angular.module('transformerApp', ['ngCookies'])
         //     socket.emit('disconnect', { my: 'data' });
         // }
 
-        setInterval(function () {
-            console.log('mostrando alguma coisa');
-        }, 5000);
+//        setInterval(function () {
+//            console.log('mostrando alguma coisa');
+//        }, 5000);
     });

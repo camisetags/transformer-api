@@ -38,7 +38,7 @@ module.exports = function (io) {
             var discId = _.findWhere(connecteds, { sock_id: socket.conn.id });
 
             request({
-                uri: 'http://localhost:3000/api/trans/'+discId.trans_id,
+                uri: 'http://localhost:3000/api/trans/con/'+discId.trans_id,
                 method: 'PUT',
                 json: true,
                 form: {
@@ -47,9 +47,10 @@ module.exports = function (io) {
             }, function (error, response, body) {
                 console.log('Servidor de id '+ body._id +' foi desconectado...');
                 io.sockets.emit('socket disconnected', body);
-            });
-
-
+                
+                
+            });   
         });
+    
     });
 }
