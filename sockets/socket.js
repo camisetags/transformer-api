@@ -42,11 +42,14 @@ module.exports = function (io) {
                 method: 'PUT',
                 json: true,
                 form: {
-                    status: 'disconnected'
+                    status: 'disconnected',
+                    balanced: ''
                 }
             }, function (error, response, body) {
                 console.log('Servidor de id '+ body._id +' foi desconectado...');
-                io.sockets.emit('socket disconnected', body);
+                
+                var disconn_trans = { message: 'foi desconectado', body: body };
+                io.sockets.emit('socket disconnected', disconn_trans);
                 
                 request({
                     uri: api_endpoint+'/api/trans/con/connected',
