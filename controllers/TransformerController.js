@@ -1,7 +1,25 @@
 module.exports = function (app) {
     var mongoose = require('mongoose');
     var Transformer = app.models.Transformer;
-
+    
+    Transformer.remove({}, function (err) {
+        if (err) {
+            throw err;
+        } else {
+            console.log('todas os transformadores foram removidos...');
+            for ( var i=0; i<10; i++ ){
+                var trans = new Transformer();
+                trans.status = 'disconnected';
+                trans.save(function (err, doc) {
+                    if (err) {
+                        throw err;
+                    }
+                    console.log('Transformador criado! _id: '+ doc._id);
+                });
+            }
+        }
+    });
+    
     var TransformerController = {
         index: function (req, res) {
             var page = 0;
@@ -128,26 +146,34 @@ module.exports = function (app) {
 
         get_connected: function (req, res) {
             var query = {
-                status: 'disconnected'
+                status: req.params.connection
             };
-            Transformer.find(query, function (err, docs) {
-                if (err) {
-                    res.json({
-                        code: 500,
-                        data: 'Opa, olha o erro: '+ err
-                    });
-                } else if (!docs) {
-                    res.json({
-                        code: 404,
-                        data: 'Nenhum transformador disponível...'
-                    });
-                } else {
-                    res.json({
-                        code: 200,
-                        data: docs
-                    });
-                }
-            });
+            
+            if (query.status == 'connected' || query.status == 'disconnected') {
+                Transformer.find(query, function (err, docs) {
+                    if (err) {
+                        res.json({
+                            code: 500,
+                            data: 'Opa, olha o erro: '+ err
+                        });
+                    } else if (!docs) {
+                        res.json({
+                            code: 404,
+                            data: 'Nenhum transformador disponível...'
+                        });
+                    } else {
+                        res.json({
+                            code: 200,
+                            data: docs
+                        });
+                    }
+                });
+            } else {
+                res.json({
+                    code: 500,
+                    data: 'Esperava receber connected ou disconnected como parametro!!'
+                });
+            }
         }
     };
 

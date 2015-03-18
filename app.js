@@ -10,6 +10,8 @@ var express      = require('express'),
     io           = require('socket.io')(server);
 
 global.db = mongoose.connect('mongodb://localhost:27017/transformer');
+global.api_endpoint = 'http://localhost:3000';
+
 
 app.engine('html', swig.renderFile);
 app.set('view engine', 'html');

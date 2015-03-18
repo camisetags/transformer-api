@@ -4,12 +4,12 @@ angular.module('transformerApp', ['ngCookies'])
     .controller('TransformerController', function ($scope) {
 
         var socket = io.connect('http://localhost:3000');
-
+        
         socket.on('server_message', function (data) {
             $scope.status = data;
             console.log($scope.status);
         });
-
+        
         socket.on('con', function (data) {
             console.log(data);
         });
@@ -24,7 +24,7 @@ angular.module('transformerApp', ['ngCookies'])
         //     socket.emit('disconnect', { my: 'data' });
         // }
 
-        setInterval(function () {
-            console.log('mostrando alguma coisa');
-        }, 5000);
+//        setInterval(function () {
+//            console.log('mostrando alguma coisa');
+//        }, 5000);
     });
