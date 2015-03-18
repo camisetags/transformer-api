@@ -23,7 +23,7 @@ module.exports = function (io) {
                     }
                 }, function (error, response, body) {
                     console.log(body);
-                    connecteds.push({ sock_id: socket.conn.id, trans_id: body._id});
+                    connecteds.push({ sock_id: socket.conn.id, socket: socket, trans_id: body._id});
                     socket.emit('con', body);
                     io.sockets.emit('connected sockets', body);
                 });
@@ -34,7 +34,7 @@ module.exports = function (io) {
         
         socket.on('disconnect', function (data) {
             console.log('desconnectou.. status: '+ data);
-
+            
             var discId = _.findWhere(connecteds, { sock_id: socket.conn.id });
 
             request({
@@ -46,7 +46,7 @@ module.exports = function (io) {
                     balanced: ''
                 }
             }, function (error, response, body) {
-                console.log('Servidor de id '+ body._id +' foi desconectado...');
+                console.log('Servidor de id '+ response +' foi desconectado...');
                 
                 var disconn_trans = { message: 'foi desconectado', body: body };
                 io.sockets.emit('socket disconnected', disconn_trans);
@@ -56,7 +56,9 @@ module.exports = function (io) {
                     method: 'GET',
                     json: true
                 }, function (error, response, body) {
-                    
+                    for ( var i=0; i<body.data.lenght; i++ ) {
+                        console.log(response.body[i]);
+                    }
                 });
             });   
         });
