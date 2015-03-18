@@ -1,7 +1,25 @@
 module.exports = function (app) {
     var mongoose = require('mongoose');
     var Transformer = app.models.Transformer;
-
+    
+    Transformer.remove({}, function (err) {
+        if (err) {
+            throw err;
+        } else {
+            console.log('todas os transformadores foram removidos...');
+            for ( var i=0; i<10; i++ ){
+                var trans = new Transformer();
+                trans.status = 'disconnected';
+                trans.save(function (err, doc) {
+                    if (err) {
+                        throw err;
+                    }
+                    console.log('Transformador criado! _id: '+ doc._id);
+                });
+            }
+        }
+    });
+    
     var TransformerController = {
         index: function (req, res) {
             var page = 0;

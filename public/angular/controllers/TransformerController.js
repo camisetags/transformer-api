@@ -10,22 +10,6 @@ angular.module('transformerApp', ['ngCookies'])
             console.log($scope.status);
         });
         
-        function* fibonacci() { // a generator function
-            let [prev, curr] = [0, 1];
-            for (;;) {
-                [prev, curr] = [curr, prev + curr];
-                yield curr;
-            }
-        }
-
-        for (let n of fibonacci()) {
-            // truncate the sequence at 1000
-            if (n > 1000)
-                break;
-            print(n);
-        }
-        
-    
         socket.on('con', function (data) {
             console.log(data);
         });

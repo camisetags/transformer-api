@@ -6,6 +6,7 @@ module.exports = function (app) {
             description: String,
             date: { type: Date, default: Date.now}
         }],
+        balancing: String,
         problems: [{
             name: String,
             description: String
